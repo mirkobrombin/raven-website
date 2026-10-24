@@ -112,7 +112,7 @@ But these are the first benchmarks. I don't know whether it'll be like this for 
 
 So let's do this: I've put a Python test suite in the GitHub repository. I couldn't include the various Windows applications for obvious reasons, so you'll have to download those yourselves... but do it, try running them. If you get as far as running the tests, we're already at the point where Raven starts on devices with different configurations.
 
-Then let's look at the benchmarks: post them [in this issue](https://github.com/mirkobrombin/raven/issues/2), so we can evaluate Raven's behaviour together on hardware and configurations other than mine. When you post the results, also include the operating system, processor, GPU and the versions of the drivers and runtimes used. And if something doesn't start, post that too, along with the command you ran and the error: I need to understand where Raven stops too, not just how fast it goes when it works.
+Then let's look at the benchmarks: post them [in this issue](https://github.com/mirkobrombin/raven/issues/3), so we can evaluate Raven's behaviour together on hardware and configurations other than mine. When you post the results, also include the operating system, processor, GPU and the versions of the drivers and runtimes used. And if something doesn't start, post that too, along with the command you ran and the error: I need to understand where Raven stops too, not just how fast it goes when it works.
 
 ## Thanks
 
