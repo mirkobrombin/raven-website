@@ -1,0 +1,38 @@
+---
+import Icon from './Icon.astro';
+---
+<button class="theme-toggle" type="button" aria-label="Theme: System. Switch to light theme." title="Theme: System. Switch to light theme.">
+  <Icon name="brightness_auto" class="theme-icon theme-system" />
+  <Icon name="light_mode" class="theme-icon theme-light" />
+  <Icon name="dark_mode" class="theme-icon theme-dark" />
+</button>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const root = document.documentElement;
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const modes = ['system', 'light', 'dark'];
+
+  function applyTheme(mode: string) {
+    root.dataset.themeMode = mode;
+    root.dataset.theme = mode === 'system' ? (system.matches ? 'dark' : 'light') : mode;
+    const next = modes[(modes.indexOf(mode) + 1) % modes.length];
+    const label = `Theme: ${mode[0].toUpperCase() + mode.slice(1)}. Switch to ${next} theme.`;
+    button?.setAttribute('aria-label', label);
+    button?.setAttribute('title', label);
+  }
+
+  applyTheme(root.dataset.themeMode ?? 'system');
+  button?.addEventListener('click', () => {
+    const next = modes[(modes.indexOf(root.dataset.themeMode ?? 'system') + 1) % modes.length];
+    applyTheme(next);
+    try { localStorage.setItem('raven-theme', next); } catch {}
+  });
+  system.addEventListener('change', () => {
+    if (root.dataset.themeMode === 'system') applyTheme('system');
+  });
+  window.addEventListener('storage', event => {
+    if (event.key === 'raven-theme' || event.key === null) {
+      applyTheme(modes.includes(event.newValue ?? '') ? event.newValue! : 'system');
+    }
+  });
+</script>

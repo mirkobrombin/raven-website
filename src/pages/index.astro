@@ -1,0 +1,63 @@
+---
+import Icon from '../components/Icon.astro';
+import '../styles/global.css';
+import ThemeHead from '../components/ThemeHead.astro';
+import SocialMeta from '../components/SocialMeta.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BenchmarkHighlights from '../components/BenchmarkHighlights.astro';
+
+const docs = "/docs/";
+const install = "/docs/installation/";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <ThemeHead />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo%201.svg" />
+    <SocialMeta title="Raven - A Windows your apps recognize." description="Install and run Windows applications on Linux with their own installers. No Windows virtual machine. Compatibility is still in development." />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="hero-background">
+      <Header />
+      <div>
+        <section id="main" tabindex="-1" class="hero container" aria-labelledby="hero-heading">
+          <div class="hero-copy">
+            <h1 id="hero-heading">A Windows your apps<br class="desktop-break" /> recognize.</h1>
+            <p>Install and run Windows applications on Linux with their own installers. No Windows virtual machine. Compatibility is still in development.</p>
+            <div class="hero-actions">
+              <a class="button primary" href={install}>Install Raven <Icon name="arrow_forward" class="arrow" /></a>
+              <a class="button" href={docs}>Read the docs <Icon name="arrow_forward" class="arrow" /></a>
+            </div>
+          </div>
+          <img class="hero-art" src="/assets/hero.svg" width="478" height="478" alt="" />
+        </section>
+      </div>
+    </div>
+    <main class="container content" aria-label="About Raven">
+      <section class="install-section" aria-labelledby="install-heading">
+        <div class="install-copy">
+          <h2 id="install-heading">Install the<br />Windows way.</h2>
+          <p>Download the installer of your favorite app or game and run it, just like on Windows. Use a separate prefix for each app. Raven attempts a snapshot for recognised installers; create and verify a manual checkpoint before changes you need to undo.</p>
+          <a class="button" href={install}>Install Raven <Icon name="arrow_forward" class="arrow" /></a>
+        </div>
+        <img class="install-art illustration-light" src="/assets/Frame%2010.svg" width="460" height="291" alt="Install in three steps: download, run, ready." />
+        <img class="install-art illustration-dark" src="/assets/install-dark.svg" width="460" height="291" alt="Install in three steps: download, run, ready." />
+      </section>
+      <section class="explanation" aria-labelledby="how-heading">
+        <h2 id="how-heading">How does it work?</h2>
+        <p>A virtual machine boots a guest operating system. Compatibility runtimes such as Wine instead implement the Windows interfaces an application needs.</p>
+        <p>Raven runs the .exe directly on the CPU in a supervised guest process. Some Windows functions execute inside that process, in Raven's guest components or libraries. Requests for supervisor-managed services cross into the runtime outside it, which manages processes, handles, files and registry state and mediates access to the Linux host.</p>
+        <p>Raven implements Windows Installer custom actions, side-by-side assemblies through WinSxS and a service manager. These are among the interfaces real installers depend on; application compatibility still needs testing.</p>
+        <p>The official redistributables can be installed with their classic installers, like you would on Windows (Visual C++ 2005 to 2022, DirectX, .NET Framework 3.5 and 4.8, XNA and OpenAL). Raven protects its own system libraries during installation. Snapshot creation can fail, so check that a checkpoint exists before relying on rollback. Tested applications can use the vendor's installer; other applications may still fail to install or start.</p>
+        <p>Graphics go straight to Wayland and Vulkan, with DXVK and vkd3d-proton for Direct3D.</p>
+        <a class="button" href={docs}>Read the docs <Icon name="arrow_forward" class="arrow" /></a>
+      </section>
+      <BenchmarkHighlights />
+    </main>
+    <Footer />
+  </body>
+</html>

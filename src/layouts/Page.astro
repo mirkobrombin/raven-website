@@ -1,0 +1,25 @@
+---
+import ThemeHead from '../components/ThemeHead.astro';
+import SocialMeta from '../components/SocialMeta.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import '../styles/content.css';
+const { title, description, pageClass = '', lang = 'en', noindex = false } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <ThemeHead />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo%201.svg" />
+    <SocialMeta title={`${title} - Raven`} description={description} noindex={noindex} />
+  </head>
+  <body class={`inner-page ${pageClass}`}>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <Header />
+    <slot />
+    <Footer />
+  </body>
+</html>

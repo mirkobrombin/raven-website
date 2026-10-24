@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+const repository = "https://github.com/mirkobrombin/raven";
+---
+    <footer class="site-footer">
+      <svg class="footer-edge" width="1280" height="43" viewBox="0 0 1280 43" preserveAspectRatio="none" aria-hidden="true"><path d="M0 42 L161 1 L1280 41" /></svg>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="/" aria-label="Raven home"><img class="wordmark-light" src="/assets/Frame%207.svg" width="89" height="41" alt="Raven" /><img class="wordmark-dark" src="/assets/wordmark-dark.svg" width="89" height="41" alt="Raven" /></a>
+          <p><a href="/docs/development/#licenses">Raven code: MIT. Components retain their licenses.</a></p>
+        </div>
+        <div class="footer-right">
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <a href="/docs/">Docs</a>
+            <a href="/docs/installation/">Install</a>
+            <a href="/news/">News</a>
+            <a class="social-link" href={repository}><img src="/assets/Vector.svg" width="22" height="22" alt="" />GitHub <Icon name="arrow_outward" class="external" /></a>
+            <a class="social-link sponsor" href="/sponsor/"><Icon name="favorite" />Sponsor <Icon name="arrow_outward" class="external" /></a>
+          </nav>
+          <p>© 2026 Raven Developers - A product by <a href="https://bromb.in/">Mirko Brombin</a>.</p>
+        </div>
+      </div>
+    </footer>

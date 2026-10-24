@@ -1,0 +1,87 @@
+---
+import Icon from '../components/Icon.astro';
+import Page from './Page.astro';
+const { frontmatter, headings: pageHeadings = [] } = Astro.props;
+const pages = [
+  { href: '/docs/', title: 'Introduction', group: 'Getting started' },
+  { href: '/docs/installation/', title: 'Installation', group: 'Getting started' },
+  { href: '/docs/quick-start/', title: 'Your first application', group: 'Getting started' },
+  { href: '/docs/prefixes/', title: 'Prefixes and snapshots', group: 'Using Raven' },
+  { href: '/docs/graphics/', title: 'Graphics and desktop', group: 'Using Raven' },
+  { href: '/docs/compatibility/', title: 'Application compatibility', group: 'Using Raven' },
+  { href: '/docs/troubleshooting/', title: 'Troubleshooting', group: 'Using Raven' },
+  { href: '/docs/command-line/', title: 'Command-line reference', group: 'Reference' },
+  { href: '/docs/benchmarks/', title: 'Benchmarks', group: 'Reference' },
+  { href: '/docs/development/', title: 'Development and licenses', group: 'Reference' },
+];
+const current = pages.findIndex(page => page.href === Astro.url.pathname.replace(/\/?$/, '/'));
+const headings = pageHeadings.filter((heading: { depth: number }) => heading.depth === 2);
+---
+<Page title={`${frontmatter.title} | Docs`} description={frontmatter.description} pageClass="docs-page">
+  <div class="docs-shell container">
+    <aside class="docs-sidebar" aria-label="Documentation">
+      <a class="docs-label" href="/docs/">Raven docs <span>Early development</span></a>
+      <label class="search-label" for="docs-search">Find a page</label>
+      <input id="docs-search" type="search" placeholder="Filter documentation..." autocomplete="off" />
+      <nav aria-label="Documentation pages">
+        {['Getting started', 'Using Raven', 'Reference'].map(group => (
+          <div class="docs-group">
+            <h2>{group}</h2>
+            {pages.filter(page => page.group === group).map(page => <a href={page.href} aria-current={page.href === pages[current]?.href ? 'page' : undefined}>{page.title}</a>)}
+          </div>
+        ))}
+      </nav>
+      <p id="search-empty" hidden>No matching pages.</p>
+    </aside>
+    <main id="content" class="doc-article" tabindex="-1">
+      <div class="breadcrumbs"><a href="/docs/">Documentation</a><span>/</span><span>{frontmatter.title}</span></div>
+      <h1>{frontmatter.title}</h1>
+      <p class="doc-description">{frontmatter.description}</p>
+      <div class="prose"><slot /></div>
+      <nav class="doc-pagination" aria-label="Next and previous pages">
+        {current > 0 ? <a href={pages[current - 1].href}><span>Previous</span>{pages[current - 1].title}</a> : <div />}
+        {current < pages.length - 1 && <a href={pages[current + 1].href}><span>Next</span>{pages[current + 1].title} <Icon name="arrow_forward" class="arrow" /></a>}
+      </nav>
+    </main>
+    <aside class="docs-toc" aria-label="On this page">
+      <strong>On this page</strong>
+      {headings.map((heading: { slug: string; text: string }) => <a href={`#${heading.slug}`}>{heading.text}</a>)}
+      <a class="toc-sponsor" href="/sponsor/">Help Raven grow <Icon name="arrow_outward" class="external" /></a>
+    </aside>
+  </div>
+</Page>
+<script>
+  const search = document.querySelector<HTMLInputElement>('#docs-search');
+  search?.addEventListener('input', () => {
+    const query = search.value.trim().toLowerCase();
+    let count = 0;
+    document.querySelectorAll<HTMLElement>('.docs-group').forEach(group => {
+      let visible = 0;
+      group.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
+        link.hidden = !link.textContent?.toLowerCase().includes(query);
+        if (!link.hidden) visible++;
+      });
+      group.hidden = visible === 0;
+      count += visible;
+    });
+    const empty = document.querySelector<HTMLElement>('#search-empty');
+    if (empty) empty.hidden = count > 0;
+  });
+  document.querySelectorAll<HTMLPreElement>('.prose pre').forEach(pre => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-code';
+    button.textContent = 'Copy';
+    button.setAttribute('aria-label', 'Copy code');
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Select code to copy';
+      }
+      setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+    });
+    pre.append(button);
+  });
+</script>

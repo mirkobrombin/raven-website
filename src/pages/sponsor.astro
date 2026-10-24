@@ -1,0 +1,89 @@
+---
+import Icon from '../components/Icon.astro';
+import Page from '../layouts/Page.astro';
+import ContactForm from '../components/ContactForm.astro';
+const ways = [
+  { title: 'PayPal', label: 'Preferred · One-time or recurring', text: 'Choose an amount and give once, or make it a regular contribution.', href: 'https://www.paypal.com/donate?hosted_button_id=HM2VKUH5STU4J', action: 'Give with PayPal', preferred: true },
+  { title: 'GitHub Sponsors', label: 'Monthly or one-time', text: 'Sponsor Mirko Brombin and the open source work behind Raven.', href: 'https://github.com/sponsors/mirkobrombin', action: 'Open GitHub Sponsors' },
+  { title: 'Patreon', label: 'Monthly', text: 'Make a monthly contribution to the independent projects Mirko maintains.', href: 'https://www.patreon.com/MirkoBrombin', action: 'Open Patreon' },
+  { title: 'Bank transfer', label: 'Direct', text: 'Use a direct transfer if you prefer to give without a donation platform.', href: '#bank-details', action: 'See bank details' },
+  { title: 'Cryptocurrency', label: 'BTC, ETH, XMR and more', text: 'Choose your currency and check the network before sending a contribution.', href: '#crypto', action: 'See addresses' },
+  { title: 'Company sponsorship', label: 'For teams and organizations', text: 'Talk about helping fund compatibility testing and runtime development.', href: '#companies', action: 'Get in touch' },
+];
+const wallets = [
+  { name: 'Ethereum', network: 'ETH · ERC20', address: '0xef6a653c63db31403f507bca277f719d2f3d44f8' },
+  { name: 'Bitcoin', network: 'BTC · SegWit', address: 'bc1q2svx64v90hyyd7jt8xamvqm9vc5248l5rgzwpm' },
+  { name: 'Monero', network: 'XMR', address: '4B19Gr6aaoE7TbPN7XbZHaaMDf1SjM2xaiVvK9M6v6HcHZiwvMdAsVs8Hftw5miQinjTVotYXAEQs6vLDsV8hJTiDHi49kf' },
+  { name: 'Litecoin', network: 'LTC', address: 'LWqpd2411CQTuWD15bcPP7bfAw3wmYHScm' },
+  { name: 'Ripple', network: 'XRP · Required memo: 420078619', address: 'rNxp4h8apvRis6mJf9Sh8C6iRxfrDWN7AV' },
+];
+---
+<Page title="Sponsor" description="Help fund Raven development, application testing, and documentation.">
+  <main id="content" class="container sponsor-content" tabindex="-1">
+    <div class="sponsor-intro">
+      <p class="eyebrow">Independent software, built in the open.</p>
+      <h1>Give Raven more<br />time to grow.</h1>
+      <p>Every working application takes time to understand, test, and maintain. Sponsoring Mirko helps make room for that work. Pick the way that suits you.</p>
+    </div>
+    <section aria-labelledby="giving-heading">
+      <h2 id="giving-heading">Ways to give</h2>
+      <div class="giving-grid">
+        {ways.map(way => <a class:list={['giving-card', { preferred: way.preferred }]} href={way.href}>
+          <span class="card-label">{way.label}</span>
+          <h3>{way.title}</h3>
+          <p>{way.text}</p>
+          <span class="card-link">{way.action} <Icon name="arrow_outward" class="external" /></span>
+        </a>)}
+      </div>
+    </section>
+    <section class="funding-work" aria-labelledby="work-heading">
+      <h2 id="work-heading">What your contribution makes time for</h2>
+      <div class="work-grid">
+        <div><h3>Real applications</h3><p>Following installers, opening windows, and checking the workflows that people actually need.</p></div>
+        <div><h3>The runtime</h3><p>Implementing Windows behavior, tracing failures, and keeping existing applications working as Raven changes.</p></div>
+        <div><h3>Graphics and compatibility</h3><p>Testing rendering paths, drivers, and application versions against repeatable workloads.</p></div>
+        <div><h3>Documentation</h3><p>Clear guides, and compatibility results that stay up to date with every release.</p></div>
+      </div>
+    </section>
+    <section class="transfer-section" id="bank-details" aria-labelledby="bank-heading">
+      <h2 id="bank-heading">Bank details</h2>
+      <dl class="bank-details">
+        <div><dt>Account holder</dt><dd>Mirko Brombin</dd></div>
+        <div><dt>IBAN</dt><dd>LT50 3250 0948 5804 5072</dd></div>
+        <div><dt>BIC / SWIFT</dt><dd>REVOLT21</dd></div>
+      </dl>
+    </section>
+    <section class="crypto-section" id="crypto" aria-labelledby="crypto-heading">
+      <h2 id="crypto-heading">Crypto addresses</h2>
+      <div class="crypto-list">
+        {wallets.map(wallet => <div class="crypto-row">
+          <h3>{wallet.name}<small>{wallet.network}</small></h3>
+          <code>{wallet.address}</code>
+          <button type="button" class="copy-address" data-address={wallet.address} aria-label={`Copy ${wallet.name} address`}>Copy</button>
+        </div>)}
+      </div>
+      <p class="sponsor-note">For XRP, include memo <strong>420078619</strong>. Copying the address does not copy the memo. Use the network shown for each currency.</p>
+      <p class="copy-feedback" role="status" aria-live="polite"></p>
+    </section>
+    <section class="company-section" id="companies" aria-labelledby="company-heading">
+      <h2 id="company-heading">Want to help as a company?</h2>
+      <p>If your team wants to back Raven, contact Mirko to discuss the work you would like to help fund and how your contribution can be recognized.</p>
+      <ContactForm />
+    </section>
+  </main>
+</Page>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-address').forEach(button => {
+    button.addEventListener('click', async () => {
+      const feedback = document.querySelector<HTMLElement>('.copy-feedback');
+      try {
+        await navigator.clipboard.writeText(button.dataset.address ?? '');
+        button.textContent = 'Copied';
+        if (feedback) feedback.textContent = `${button.getAttribute('aria-label')?.replace('Copy ', '')} copied.`;
+      } catch {
+        if (feedback) feedback.textContent = 'Clipboard access is unavailable. Select the address and copy it manually.';
+      }
+      setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+    });
+  });
+</script>

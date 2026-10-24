@@ -1,0 +1,20 @@
+---
+import Icon from '../components/Icon.astro';
+import Page from './Page.astro';
+const { frontmatter } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+<Page title={frontmatter.title} description={frontmatter.description} pageClass="news-post-page" lang={frontmatter.lang ?? 'en'}>
+  <main id="content" class="container news-post" tabindex="-1">
+    <a class="back-to-news" href="/news/"><Icon name="arrow_back" class="arrow" /> Back to news</a>
+    <article lang={frontmatter.lang ?? 'en'}>
+      <header class="news-post-header">
+        <time datetime={frontmatter.date}>{dateFormat.format(new Date(`${frontmatter.date}T12:00:00Z`))}</time>
+        <h1>{frontmatter.title}</h1>
+        <p>{frontmatter.description}</p>
+      </header>
+      <div class="prose"><slot /></div>
+    </article>
+    <a class="back-to-news news-post-back" href="/news/"><Icon name="arrow_back" class="arrow" /> All news</a>
+  </main>
+</Page>

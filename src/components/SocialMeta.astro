@@ -1,0 +1,82 @@
+---
+import { pages, pagePath, coverPath } from '../lib/pages';
+const { title, description, noindex = false } = Astro.props;
+const path = pagePath(Astro.url.pathname);
+const resource = pages.find(page => page.path === path);
+const origin = Astro.site ?? new URL('http://localhost:9284');
+const absolute = (value: string) => new URL(value, origin).href;
+const url = absolute(path);
+const image = absolute(coverPath(path));
+const lang = resource?.lang ?? 'en';
+const article = resource?.section === 'News' && !!resource.date;
+const indexable = import.meta.env.PROD && !!Astro.site && !noindex;
+const person = { '@id': absolute('/#developer') };
+const software = { '@id': absolute('/#software') };
+const breadcrumbs = [
+  { name: 'Raven', path: '/' },
+  ...(path.startsWith('/docs/') ? [{ name: 'Documentation', path: '/docs/' }] : []),
+  ...(article ? [{ name: 'News', path: '/news/' }] : []),
+  ...(path !== '/' && path !== '/docs/' ? [{ name: resource?.title ?? title, path }] : []),
+];
+const graph: Record<string, unknown>[] = [
+  { '@type': 'Person', ...person, name: 'Mirko Brombin', url: 'https://bromb.in/', sameAs: ['https://github.com/mirkobrombin'] },
+  { '@type': 'WebSite', '@id': absolute('/#website'), name: 'Raven', url: absolute('/'), description: pages[0].description, publisher: person, inLanguage: [...new Set(pages.map(page => page.lang))] },
+  {
+    '@type': article ? 'BlogPosting' : path.startsWith('/docs/') ? 'TechArticle' : path === '/news/' ? 'CollectionPage' : 'WebPage',
+    '@id': `${url}#resource`, url, name: title, headline: resource?.title ?? title, description,
+    inLanguage: lang, isPartOf: { '@id': absolute('/#website') }, author: person, publisher: person,
+    image: { '@type': 'ImageObject', url: image, width: 1200, height: 630, caption: `${resource?.title ?? title} - Raven` },
+    primaryImageOfPage: { '@id': `${url}#cover` },
+    ...(article ? { datePublished: resource.date, ...(resource.updated ? { dateModified: resource.updated } : {}), mainEntityOfPage: url, about: software } : {}),
+    ...(path.startsWith('/docs/') ? { about: software } : {}),
+    ...(path === '/' ? { mainEntity: software } : {}),
+    ...(path === '/news/' ? { hasPart: pages.filter(page => page.date).map(page => ({ '@type': 'BlogPosting', headline: page.title, url: absolute(page.path), datePublished: page.date, inLanguage: page.lang })) } : {}),
+  },
+  { '@type': 'ImageObject', '@id': `${url}#cover`, url: image, contentUrl: image, width: 1200, height: 630, caption: `${resource?.title ?? title} - Raven` },
+];
+if (path === '/') graph.push({
+  '@type': ['SoftwareApplication', 'SoftwareSourceCode'], ...software, name: 'Raven', url,
+  description: 'An experimental runtime for running Windows applications on Linux.', operatingSystem: 'Linux x86_64',
+  applicationCategory: 'UtilitiesApplication', codeRepository: 'https://github.com/mirkobrombin/raven',
+  programmingLanguage: 'C++', runtimePlatform: 'Linux x86_64', author: person,
+  installUrl: absolute('/docs/installation/'), isAccessibleForFree: true,
+});
+if (breadcrumbs.length > 1) graph.push({
+  '@type': 'BreadcrumbList', '@id': `${url}#breadcrumbs`,
+  itemListElement: breadcrumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, name: crumb.name, item: absolute(crumb.path) })),
+});
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+---
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded&amp;icon_names=arrow_back,arrow_forward,arrow_outward,brightness_auto,close,dark_mode,favorite,light_mode,menu&amp;display=block" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="author" content="Mirko Brombin" />
+<meta name="application-name" content="Raven" />
+<meta name="robots" content={indexable ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' : 'noindex, nofollow'} />
+<link rel="canonical" href={url} />
+<link rel="alternate" type="application/rss+xml" title="Raven news" href="/news/feed.xml" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#171317" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content={article ? 'article' : 'website'} />
+<meta property="og:site_name" content="Raven" />
+<meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_US'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={image} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${resource?.title ?? title} - Raven`} />
+{article && <meta property="article:published_time" content={resource.date} />}
+{article && resource.updated && <meta property="article:modified_time" content={resource.updated} />}
+{article && <meta property="article:author" content="https://bromb.in/" />}
+{article && <meta property="article:section" content="Raven news" />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={`${resource?.title ?? title} - Raven`} />
+<script type="application/ld+json" set:html={json} />

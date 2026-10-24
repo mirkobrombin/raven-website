@@ -1,0 +1,30 @@
+---
+import Icon from '../../components/Icon.astro';
+import type { MarkdownInstance } from 'astro';
+import Page from '../../layouts/Page.astro';
+
+type News = { title: string; description: string; date: string };
+const posts = Object.values(import.meta.glob<MarkdownInstance<News>>('./*.md', { eager: true }))
+  .sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date));
+const dateFormat = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<Page title="News" description="Development notes and announcements from the Raven project." pageClass="news-page">
+  <main id="content" class="container news-content" tabindex="-1">
+    <div class="news-intro">
+      <h1>News</h1>
+      <p>Development notes and announcements from the Raven project.</p>
+    </div>
+    <div class="news-list">
+      {posts.map(post => (
+        <article class="news-item">
+          <a href={post.url?.replace(/\/?$/, '/')}>
+            <time datetime={post.frontmatter.date}>{dateFormat.format(new Date(`${post.frontmatter.date}T12:00:00Z`))}</time>
+            <h2>{post.frontmatter.title}</h2>
+            <p>{post.frontmatter.description}</p>
+            <span class="news-read">Read the update <Icon name="arrow_forward" class="arrow" /></span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </main>
+</Page>

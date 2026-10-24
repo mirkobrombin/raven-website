@@ -1,0 +1,27 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import Icon from './Icon.astro';
+const repository = "https://github.com/mirkobrombin/raven";
+---
+      <header class="site-header container">
+        <a class="brand" href="/" aria-label="Raven home"><img class="wordmark-light" src="/assets/Frame%207.svg" width="89" height="41" alt="Raven" /><img class="wordmark-dark" src="/assets/wordmark-dark.svg" width="89" height="41" alt="Raven" /></a>
+        <nav class="header-nav" aria-label="Main navigation">
+          <a href="/docs/">Docs</a>
+          <a href="/docs/installation/">Install</a>
+          <a href="/sponsor/">Sponsor</a>
+          <a href="/news/">News</a>
+        </nav>
+        <div class="header-actions">
+          <ThemeToggle />
+          <a class="social-link header-github" href={repository}><img src="/assets/Vector.svg" width="22" height="22" alt="" />GitHub <Icon name="arrow_outward" class="external" /></a>
+          <details class="mobile-menu">
+            <summary aria-label="Navigation menu"><Icon name="menu" /></summary>
+            <nav aria-label="Mobile navigation">
+              <a href="/docs/">Docs</a>
+              <a href="/docs/installation/">Install</a>
+              <a href="/sponsor/">Sponsor</a>
+              <a href="/news/">News</a>
+            </nav>
+          </details>
+        </div>
+      </header>
