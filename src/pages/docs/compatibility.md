@@ -13,14 +13,18 @@ Installer-based applications below were tested with the vendor's own installer i
 | 7-Zip 24.09 (EXE installer) | Yes | Yes | Yes | Not automated yet | 75% |
 | 7-Zip 24.09 (MSI) | Yes | Yes | Yes | Not automated yet | 75% |
 | Audacity 3.6.4 (Inno Setup) | Yes | Yes | Yes | Not automated yet | 75% |
-| KeePass 2.57 (Inno Setup) | Yes | Yes | No | Not automated yet | 50% |
+| KeePass 2.57 (Inno Setup, fresh prefix without .NET) | Yes | Yes | No (.NET missing) | Not automated yet | 50% |
 | VLC 3.0.21 (NSIS) | Yes | No | No | Not automated yet | 25% |
 | ClassiCube 1.3.8 | Portable | Yes | Yes | Singleplayer | 75% |
 | Minesweeper | Portable | Yes | Yes | Gameplay | 75% |
 
-Measured on October 23, 2026. **Tested Raven revision: not recorded for this table.** These entries remain provisional until the application results are tied to a source revision and retained run output; they must not be attributed to the older CTest audit. KeePass is a .NET Framework 4.8 program and the test prefixes start without the Framework, so its window check stops at the missing runtime. VLC installs and its start-up is being worked on.
+Measured on October 23, 2026. **Tested Raven revision: not recorded for this table.** These entries remain provisional until the application results are tied to a source revision and retained run output; they must not be attributed to the older CTest audit. KeePass needs .NET Framework, which was absent from the fresh prefixes used for this matrix, so that window check stops at the missing runtime. VLC installs and its start-up is being worked on.
 
 The Notepad++ workflow saves a file, closes and reopens it, appends to it, checks it was kept, copies text through the clipboard and switches theme.
+
+### KeePass with .NET installed
+
+An earlier run of KeePass 2.61 with .NET Framework 4.8 installed reached the main window and the update-check dialog. This is a separate version and prefix configuration from the fresh-prefix row above. A password database workflow has not been automated, and that earlier result has not been rerun on the current Raven revision.
 
 ## Frameworks and redistributables
 
