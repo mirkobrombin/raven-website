@@ -63,6 +63,12 @@ raven --restore-prefix [snapshot-name]
 
 They act on the prefix in `RAVEN_PREFIX`, or the default one. Without a name, `--restore-prefix` restores the newest snapshot. See [prefixes and snapshots](/docs/prefixes/).
 
+## Settings and installation tools
+
+The desktop and installer components provide `control.exe`, `regedit.exe`, `msiexec.exe`, `regsvr32.exe`, `dism.exe` and `fondue.exe`. Launch them through `--run-process` with the application's `RAVEN_PREFIX`; their arguments follow `--`, just like any other Windows program.
+
+The [built-in tools guide](/docs/prefixes/#built-in-tools) covers their purpose and launch commands, including .NET Framework 3.5 feature installation from a local package.
+
 ## Environment
 
 | Variable | Role |

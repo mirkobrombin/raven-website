@@ -15,6 +15,8 @@ export RAVEN_PREFIX="$HOME/.local/share/raven/my-first-app"
 
 Raven creates the Windows folders the first time it opens the prefix. Keep the same value for everything you do with that application.
 
+The [prefix guide](/docs/prefixes/) explains what is stored there and how to open Raven's settings panel or use the included installation tools.
+
 ## Install it
 
 Run the vendor's installer the way you would on Windows:

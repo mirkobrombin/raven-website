@@ -23,6 +23,8 @@ A virtual machine boots a guest operating system. Raven instead implements Windo
 
 Each application lives in a **prefix**: a directory with its own `C:` drive, system folders, registry and installed programs. Point `RAVEN_PREFIX` at one to use it. Separate prefixes keep applications from stepping on each other, and every prefix can be [snapshotted and restored](/docs/prefixes/) with one command.
 
+Start with a new Raven prefix rather than reusing a Wine prefix. The [prefix guide](/docs/prefixes/) explains the runtime and stored state, and shows how to launch the [settings panel and installation tools](/docs/prefixes/#built-in-tools) supplied with Raven.
+
 ## Where Raven is today
 
 Raven is young and moving fast. The [compatibility page](/docs/compatibility/) lists the applications tested so far, stage by stage, and the [benchmarks](/docs/benchmarks/) show how it compares with Wine. Linux x86_64 is the supported host; macOS is planned.
