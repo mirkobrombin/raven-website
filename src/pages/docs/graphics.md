@@ -54,6 +54,30 @@ Use `graphics/dxvk/pe32` for a 32-bit application. The DLL architecture must mat
 
 These are the Windows-side DLLs; your Vulkan driver stays the one your distribution ships.
 
+## Libraries a program ships
+
+Graphics wrappers such as DXVK, dgVoodoo and ReShade, and ASI or plugin loaders, put their own copy of a system library beside the program's executable. For these names Raven loads the program's copy instead of its own:
+
+| Library | Typical use |
+| --- | --- |
+| `d3d8.dll`, `d3d9.dll`, `d3d10core.dll`, `d3d11.dll`, `dxgi.dll`, `ddraw.dll` | Direct3D and DirectDraw wrappers, post-processing injectors |
+| `dinput.dll`, `dinput8.dll` | Input wrappers and ASI loaders |
+| `xinput1_3.dll`, `xinput1_4.dll` | Controller remappers |
+| `winmm.dll`, `version.dll` | ASI and plugin loaders |
+
+The copy must have the program's architecture: a 32-bit DLL for a 32-bit program. When it forwards to the system library, through `C:\Windows\System32\<name>`, `C:\Windows\SysWOW64\<name>` or a load restricted to the system directory, it reaches Raven's own implementation.
+
+Any other system library a program ships, such as its own `dbghelp.dll` or `winhttp.dll`, is ignored and Raven's implementation answers. Copies an installer drops into the prefix's `System32` or `SysWOW64` folders are ignored too.
+
+To load the program's copy of every system library it ships, set `RAVEN_PREFER_LOCAL_DLLS=1`:
+
+```sh
+RAVEN_PREFER_LOCAL_DLLS=1 build/native/raven --run-process --execution=native \
+  --desktop=wayland /path/to/application.exe
+```
+
+The core libraries stay Raven's even then: `ntdll`, `kernel32`, `kernelbase`, `user32`, `gdi32`, `comctl32`, `advapi32`, `msvcrt`, `ucrtbase`, `ole32`, `oleaut32`, `combase`, `rpcrt4`, `shell32`, `shlwapi`, `setupapi` and `comdlg32`.
+
 ## Text
 
 Text goes through FreeType and a CPU build of Skia, with the Liberation fonts standing in for Arial, Times New Roman and Courier New, and your host fonts as fallback. If you add fonts after a prefix was created, open a fresh prefix to pick them up.
