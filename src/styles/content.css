@@ -36,6 +36,7 @@
 .prose th { background: var(--surface); }
 .prose blockquote { margin: 25px 0; border-left: 3px solid var(--accent); padding: 1px 20px; background: var(--surface); }
 .prose img { height: auto; width: 100%; margin: 25px 0; }
+.prose video { display: block; height: auto; width: 100%; margin: 25px 0; }
 .docs-toc { position: sticky; top: 25px; font-size: 13px; line-height: 1.5; }
 .docs-toc strong { display: block; margin-bottom: 14px; }
 .docs-toc a { display: block; color: var(--muted); padding: 6px 0; }
